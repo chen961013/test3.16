@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chendecong.senior4.week2.mapper.Activity2productMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.chendecong.senior4.week2.entity.Activity2product">
+        <id column="id" property="id" />
+        <result column="aid" property="aid" />
+        <result column="pid" property="pid" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, aid, pid
+    </sql>
+    <delete id="delByaid">
+        DELETE from t_activity2product where aid = #{id}
+    </delete>
+
+</mapper>

@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.chendecong.senior4.week2.mapper.ActivityMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.chendecong.senior4.week2.entity.Activity">
+        <id column="id" property="id" />
+        <result column="name" property="name" />
+        <result column="descripton" property="descripton" />
+        <result column="begindt" property="begindt" />
+        <result column="enddt" property="enddt" />
+        <result column="total" property="total" />
+        <result column="status" property="status" />
+    </resultMap>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, name, descripton, begindt, enddt, total, status
+    </sql>
+
+    <resultMap id="voMap" type="com.chendecong.senior4.week2.entity.ActivityVo" extends="BaseResultMap">
+        <result column="good_name" property="good_name"/>
+        <result column="price" property="price"/>
+    </resultMap>
+
+    <select id="selectPageByVo" resultMap="voMap">
+        SELECT a.*,GROUP_CONCAT(p.name) good_name,p.price from t_activity a LEFT JOIN t_activity2product m ON a.id = m.aid
+        LEFT JOIN t_product p ON m.pid = p.id
+        <where>
+            <if test="vo.s != null and vo.s != '' ">
+                and a.begindt > #{vo.s}
+            </if>
+            <if test="vo.e != null and vo.e != '' ">
+                and a.enddt &lt; #{vo.e}
+            </if>
+        </where>
+        GROUP BY a.id
+    </select>
+
+    <insert id="addActivity" useGeneratedKeys = "true" parameterType="com.chendecong.senior4.week2.entity.Activity">
+        INSERT INTO `wk2`.`t_activity` (`id`, `name`, `descripton`, `begindt`, `enddt`, `total`, `status`)
+         VALUES (null, #{name}, #{descripton}, #{begindt},
+         #{enddt}, #{total}, #{status});
+        <selectKey keyProperty="id"  resultType="java.lang.Integer">
+            select LAST_INSERT_ID() as id
+        </selectKey>
+    </insert>
+
+    <select id="selectByIds" resultMap="voMap">
+        SELECT a.*,GROUP_CONCAT(p.name) good_name,p.price from t_activity a LEFT JOIN t_activity2product m ON a.id = m.aid
+        LEFT JOIN t_product p ON m.pid = p.id
+         <where>
+             a.id = #{id}
+         </where>
+         GROUP BY a.id
+    </select>
+
+</mapper>
